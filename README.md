@@ -309,3 +309,128 @@ $(document).ready(function() {
         table.draw();
 });
 ```
+
+## - Previous One
+
+```php
+if ($s == 'user_wallet_update') {
+        global $wo, $sqlConnect;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['price']) && isset($_POST['type'])) {
+            $price = $_POST['price'];
+            $type = $_POST['type'];
+
+            // if ($wo['config']['affiliate_system'] == 1) {
+
+            //     function getReferrerId($referrerId, $sqlConnect)
+            //     {
+            //         $query = "SELECT `referrer` FROM " . T_USERS . " WHERE `user_id` = '{$referrerId}'";
+            //         $result = mysqli_query($sqlConnect, $query);
+            //         if (mysqli_num_rows($result) > 0) {
+            //             $data = mysqli_fetch_assoc($result);
+            //             return $data['referrer'];
+            //         } else {
+            //             return null;
+            //         }
+            //     }
+
+            //     $user_id = $wo['user']['user_id'];
+
+            //     // Retrieve the current user's data
+            //     $query1 = "SELECT * FROM " . T_USERS . "  WHERE `user_id` = '{$user_id}'";
+            //     $sql1 = mysqli_query($sqlConnect, $query1);
+            //     if (mysqli_num_rows($sql1)) {
+            //         $data1 = mysqli_fetch_assoc($sql1);
+            //     }
+
+            //     $referrerId = $data1['referrer'];
+
+            //     // RCD Mod Here: REQUIRED;
+            //     if ($wo['config']['affiliate_request'] == 'all') {
+            //         // Loop through the levels, starting from 1 up to 3
+            //         // Loop through the levels until there are no more referrers
+            //         $level = 1;
+            //         while ($referrerId != 0 && $level<=5) {
+            //             // Retrieve the data of the referrer
+            //             $query = "SELECT * FROM " . T_USERS . " WHERE `user_id` = '{$referrerId}'";
+            //             $result = mysqli_query($sqlConnect, $query);
+            //             if (mysqli_num_rows($result) > 0) {
+            //                 $referrerData = mysqli_fetch_assoc($result);
+
+            //                 if ($referrerData['is_pro'] == '1') {
+            //                     // Retrieve the commission percentage for the specific level
+            //                     $query3 = "SELECT * FROM " . T_CONFIG . " WHERE `name` = 'user_level" . $level . "_per'";
+            //                     $sql3 = mysqli_query($sqlConnect, $query3);
+            //                     if (mysqli_num_rows($sql3) > 0) {
+            //                         $levelData = mysqli_fetch_assoc($sql3);
+            //                         $commissionPercentage = $levelData['value'];
+            //                     }
+
+            //                     // Retrieve the plan price for the referrer's pro type
+            //                     $plan_price_query = "SELECT `price` FROM " . T_MANAGE_PRO . " WHERE `id` = '{$referrerData['pro_type']}'";
+            //                     $result2 = mysqli_query($sqlConnect, $plan_price_query);
+
+            //                     if ($result2 && mysqli_num_rows($result2) > 0) {
+            //                         $row = mysqli_fetch_assoc($result2);
+            //                         $plan_price = $row['price'];
+            //                     }
+
+            //                     if($plan_price < $price){
+            //                         $commissionAmount = $plan_price * $commissionPercentage / 100;
+            //                         // Update the referrer's wallet with the commission amount
+            //                         $newWalletAmount = $referrerData['wallet'] + $commissionAmount;
+            //                         $query = "UPDATE " . T_USERS . " SET `wallet` = '{$newWalletAmount}', `balance` = '{$newWalletAmount}' WHERE `user_id` = '{$referrerId}'";
+            //                         mysqli_query($sqlConnect, $query);
+            //                         }else{
+            //                             $commissionAmount = $price * $commissionPercentage / 100;
+            //                         // Update the referrer's wallet with the commission amount
+            //                         $newWalletAmount = $referrerData['wallet'] + $commissionAmount;
+            //                         $query = "UPDATE " . T_USERS . " SET `wallet` = '{$newWalletAmount}', `balance` = '{$newWalletAmount}' WHERE `user_id` = '{$referrerId}'";
+            //                         mysqli_query($sqlConnect, $query);
+            //                         }
+            //                 }
+            //                 else {
+            //                     $query3 = "SELECT * FROM " . T_CONFIG . " WHERE `name` = 'free_affiliate_per'";
+            //                     $sql3 = mysqli_query($sqlConnect, $query3);
+            //                     if (mysqli_num_rows($sql3) > 0) {
+            //                         $levelData = mysqli_fetch_assoc($sql3);
+            //                         $commissionPercentage = $levelData['value'];
+            //                     }
+            //                     $commissionAmount = $price * $commissionPercentage / 100;
+            //                     // Update the referrer's wallet with the commission amount
+            //                     $newWalletAmount = $referrerData['wallet'] + $commissionAmount;
+            //                     $query = "UPDATE " . T_USERS . " SET `wallet` = '{$newWalletAmount}', `balance` = '{$newWalletAmount}' WHERE `user_id` = '{$referrerId}'";
+            //                     mysqli_query($sqlConnect, $query);
+            //                     // Get the next referrer ID
+                               
+            //                 }
+
+            //                 // Get the next referrer ID
+            //                 $referrerId = getReferrerId($referrerId, $sqlConnect);
+            //                 $level++; // Move to the next level
+            //             } else {
+            //                 break; // No referrer found, exit the loop
+            //             }
+            //         }
+            //     }
+            // }
+
+            // If Referee is 6th Person in Level 1:
+            if($wo['config']['rcd_fastStartActive'] == 1)
+            {
+                // 1. Check Referrer Plan:
+                // 2. Check Referee Plan:
+                // 3. Follow Conditions:
+                // - Referrer will get (balance) only 50% of his plan;
+                // - If Referee Plan is Lower, than referrer will get (balance) only 50% of buyers plan               
+            }
+
+            // Deduct the price from the user's wallet
+            $newWalletAmount = $wo['user']['wallet'] - $price;
+            // RCD Mod - commented on 07-01-24
+            // $newBalanceAmount = $wo['user']['balance'] - $price;
+            // $query5 = "UPDATE " . T_USERS . " SET `wallet` = '{$newWalletAmount}', `balance` = '{$newBalanceAmount}' WHERE `user_id` = '{$wo['user']['user_id']}'";
+            $query5 = "UPDATE " . T_USERS . " SET `wallet` = '{$newWalletAmount}' WHERE `user_id` = '{$wo['user']['user_id']}'";
+            $sql5 = mysqli_query($sqlConnect, $query5);
+        }
+    }
+```
